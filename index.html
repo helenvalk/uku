@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uku – VHK koor 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1e3a8a;
+    --indigo: #4f46e5;
+    --purple: #7c3aed;
+    --teal: #0f766e;
+    --cyan: #0891b2;
+    --amber: #b45309;
+    --red: #dc2626;
+    --concert: #1d4ed8;
+    --bg: #f0f4ff;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, #0f2060 0%, #1e3a8a 40%, #3730a3 80%, #4f46e5 100%);
+    padding: 32px 20px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(99,102,241,0.3) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(124,58,237,0.2) 0%, transparent 50%);
+  }
+  header * { position: relative; }
+  .header-icon { font-size: 40px; margin-bottom: 8px; display: block; }
+  .header-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px; font-weight: 800;
+    color: #fff; letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+  .header-sub {
+    font-size: 13px; color: rgba(255,255,255,0.75);
+    font-weight: 500; margin-bottom: 14px;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 6px 16px;
+    font-size: 12px; color: #fff; font-weight: 600;
+  }
+  .header-hint {
+    margin-top: 12px; font-size: 12px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .legend {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    padding: 12px 16px; background: #fff;
+    border-bottom: 1px solid var(--border);
+    justify-content: center;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .legend-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+
+  .days { padding: 14px 12px 0; }
+
+  .day-card {
+    border-radius: 16px;
+    border: 2px solid var(--border);
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: var(--card);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .day-card.open {
+    box-shadow: 0 6px 24px -4px rgba(0,0,0,0.12);
+  }
+
+  .day-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; cursor: pointer;
+    user-select: none; -webkit-user-select: none;
+    transition: background 0.15s;
+  }
+  .day-icon-wrap {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+    border: 2px solid transparent;
+  }
+  .day-meta { flex: 1; min-width: 0; }
+  .day-tags { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-bottom: 3px; }
+  .tag-weekday { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; }
+  .tag-label {
+    border-radius: 20px; padding: 2px 8px;
+    font-size: 10px; font-weight: 700; color: #fff;
+  }
+  .tag-important {
+    background: #fef3c7; color: #92400e;
+    border: 1px solid #fcd34d;
+    border-radius: 20px; padding: 2px 8px;
+    font-size: 10px; font-weight: 700;
+  }
+  .day-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; color: var(--text);
+  }
+  .day-subtitle { font-size: 12px; color: var(--muted); }
+  .day-arrow {
+    font-size: 11px; flex-shrink: 0;
+    transition: transform 0.2s;
+    color: var(--muted);
+  }
+  .open .day-arrow { transform: rotate(90deg); }
+
+  .day-body {
+    display: none;
+    padding: 0 16px 18px;
+    border-top: 1px solid #f1f5f9;
+  }
+  .open .day-body { display: block; }
+
+  .section-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.8px; text-transform: uppercase;
+    color: #94a3b8; margin: 14px 0 8px;
+  }
+
+  .step {
+    display: flex; gap: 10px; align-items: flex-start;
+    margin-bottom: 7px;
+  }
+  .step-time {
+    min-width: 50px; font-weight: 700;
+    font-size: 11px; padding-top: 8px;
+    flex-shrink: 0;
+  }
+  .step-box {
+    display: flex; gap: 8px; align-items: flex-start;
+    border-radius: 10px; padding: 7px 11px; flex: 1;
+    border: 1px solid transparent;
+  }
+  .step-emoji { font-size: 15px; flex-shrink: 0; line-height: 1.4; }
+  .step-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  .note {
+    display: flex; gap: 8px; align-items: flex-start;
+    padding: 7px 11px; border-radius: 8px;
+    background: #fffbeb; border: 1px solid #fde68a;
+    margin-bottom: 5px;
+  }
+  .note-icon { font-size: 13px; flex-shrink: 0; }
+  .note-text { font-size: 13px; color: #78350f; line-height: 1.5; }
+
+  .checklist-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-radius: 8px;
+    cursor: pointer; margin-bottom: 5px;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none; -webkit-user-select: none;
+  }
+  .checklist-item.checked {
+    background: #dcfce7; border-color: #86efac;
+  }
+  .check-circle {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #94a3b8; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 13px;
+    transition: all 0.15s;
+  }
+  .checked .check-circle {
+    background: #22c55e; border-color: #22c55e; color: #fff;
+  }
+  .check-text {
+    font-size: 13px; color: var(--text);
+    transition: color 0.15s;
+  }
+  .checked .check-text {
+    color: #15803d; text-decoration: line-through;
+  }
+
+  .conflict-box {
+    background: #fef2f2; border: 1px solid #fca5a5;
+    border-radius: 10px; padding: 10px 14px;
+    margin-top: 12px;
+  }
+  .conflict-title {
+    font-size: 11px; font-weight: 700; color: #dc2626;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .conflict-text { font-size: 13px; color: #7f1d1d; line-height: 1.5; }
+
+  footer {
+    margin: 8px 12px 32px;
+    padding: 18px; text-align: center;
+    background: #fff; border-radius: 16px;
+    border: 2px solid var(--border);
+  }
+  .footer-icon { font-size: 26px; margin-bottom: 6px; }
+  .footer-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 800;
+    color: var(--text); margin-bottom: 5px;
+  }
+  .footer-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .ics-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 14px; padding: 8px 16px;
+    background: var(--blue); color: #fff;
+    border-radius: 20px; font-size: 12px; font-weight: 600;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="header-icon">🎵</span>
+  <div class="header-title">VHK 40. juubeliaasta</div>
+  <div class="header-sub">Mart Siimeri kantaat · Püha Miikaeli mõõk</div>
+  <div class="header-badge">📅 27. aprill – 12. mai 2026</div>
+  <div class="header-hint">Klõpsa päeval, et näha kava ▾</div>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#0891b2"></div><span class="legend-label">Tavaproov</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div><span class="legend-label">Eriproov</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b45309"></div><span class="legend-label">Koorivorm</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1d4ed8"></div><span class="legend-label">Kontsert</span></div>
+</div>
+
+<div class="days" id="days"></div>
+
+<footer>
+  <div class="footer-icon">🌟</div>
+  <div class="footer-title">Sa oled tähtis!</div>
+  <div class="footer-text">Poistekoori meeshäältel on kantaadis <strong>kandev osa</strong> –<br>150 kõrge hääle vastu. Iga laulja loeb. 💙</div>
+  <a class="ics-link" href="uku_koor_proovid_2026.ics" download>📅 Lae alla kalendrifail (.ics)</a>
+</footer>
+
+<script>
+const DAYS = [
+  {
+    id: 0, date: "27.04", weekday: "ESMASPÄEV",
+    color: "#b45309", bg: "#fffbeb",
+    label: "KOORIVORMI PROOV KODUS", icon: "🧥",
+    title: "Proovi kooririided kodus selga",
+    subtitle: "Kodus – tee ära enne 28. aprilli!",
+    important: true,
+    steps: [
+      { time: "—", e: "🧥", t: "Pane koorivorm selga" },
+      { time: "—", e: "📏", t: "Vaata: kas mustad püksid on ÕIGE pikkusega?" },
+      { time: "—", e: "👟", t: "Pane mustad kingad jalga – kas mahuvad? Mugavad?" },
+      { time: "—", e: "✅", t: "Kui kõik sobib – paki koorivorm kenasti kokku" },
+    ],
+    costume: [
+      "Koorivorm selga – sobib?",
+      "Mustad püksid – õige pikkus?",
+      "Mustad kingad – mahuvad ja on mugavad?",
+      "Kui midagi ei sobi: ütle KOHE emale/isale ja 5. mail õpetajale!",
+    ],
+    notes: ["Pärast 5. maid ei saa enam koorivormi vahetada – tee see ära enne esimest proovi!"],
+    bring: [],
+  },
+  {
+    id: 1, date: "28.04", weekday: "TEISIPÄEV",
+    color: "#6366f1", bg: "#eef2ff",
+    label: "ERIPROOV", icon: "🎼",
+    title: "Kooride ühisproov",
+    subtitle: "Okasroosikese maja",
+    important: true,
+    steps: [
+      { time: "15:00", e: "✅", t: "Oled juba kohal – paki kotis asjad valmis" },
+      { time: "15:15", e: "🎵", t: "Lahtilaulmine – 1. korruse saal (madalad hääled)" },
+      { time: "15:30", e: "🎶", t: "Kooride ühisproov algab – dirigent Mikk Üleoja" },
+      { time: "17:30", e: "✅", t: "Proov lõpeb" },
+    ],
+    notes: [
+      "See on AINUKE kord kus KÕIK koorid proovisaalis koos!",
+      "Meeshäältel on kantaadis kandev osa – 150 kõrge hääle vastu. Iga laulja loeb!",
+    ],
+    bring: ["Noodid", "Vesi"],
+  },
+  {
+    id: 2, date: "30.04", weekday: "NELJAPÄEV",
+    color: "#0891b2", bg: "#ecfeff",
+    label: "TAVAPROOV", icon: "📋",
+    title: "Tavapärane proov",
+    subtitle: "Okasroosikese maja",
+    important: false,
+    steps: [
+      { time: "15:05", e: "✅", t: "Oled kohal – kott ja üleriided oma kohale" },
+      { time: "15:20", e: "🎵", t: "Proov algab" },
+    ],
+    notes: ["Tavaline proov, midagi uut ei toimu"],
+    bring: ["Noodid", "Vesi"],
+  },
+  {
+    id: 3, date: "03.05", weekday: "ESMASPÄEV",
+    color: "#7c3aed", bg: "#f5f3ff",
+    label: "ORKESTRIGA", icon: "🎻",
+    title: "1. ühisproov orkestriga",
+    subtitle: "Metodisti kirik",
+    important: true,
+    steps: [
+      { time: "15:45", e: "🎒", t: "Pane üleriided ja kott garderoobi" },
+      { time: "16:00", e: "🎶", t: "Ühisproov algab – koor JA orkester koos esimest korda!" },
+      { time: "19:00", e: "✅", t: "Proov lõpeb" },
+    ],
+    notes: [
+      "ESIMEST korda koos orkestriga – heli on valjum kui tavaliselt",
+      "3 tundi pikk – söö enne korralikult ja võta vett + vahepalad",
+    ],
+    bring: ["Noodid", "Vesi", "Vahepalad (proov on pikk!)"],
+  },
+  {
+    id: 4, date: "04.05", weekday: "ESMASPÄEV",
+    color: "#0f766e", bg: "#f0fdfa",
+    label: "LAVAPROOV + MEELDETULETUS", icon: "🏛️",
+    title: "Lavaproov Estonias",
+    subtitle: "Estonia kontserdisaal",
+    important: true,
+    conflict: "Solfedžo algab 16:30 – lavaproov lõpeb 16:50. Solfedžol sel päeval ei osale – teavita õpetajat ette!",
+    steps: [
+      { time: "16:00", e: "🎒", t: "Pane üleriided ja kott garderoobi" },
+      { time: "16:10", e: "🎵", t: "Lahtilaulmine RAMi saalis" },
+      { time: "16:30", e: "🎭", t: "Lavaproov: Ødegaard Psalm 63 + antifon" },
+      { time: "16:50", e: "✅", t: "Lavaproov lõpeb" },
+    ],
+    notes: [
+      "Esimest korda päris laval Estonias!",
+      "MEELDETULETUS: kas koorivorm sobis? Kui oli probleeme – räägi täna õpetajaga. Homme on VIIMANE võimalus vahetada!",
+    ],
+    bring: ["Noodid", "Vesi"],
+  },
+  {
+    id: 5, date: "05.05", weekday: "TEISIPÄEV",
+    color: "#b45309", bg: "#fffbeb",
+    label: "KOORIVORM KAASA", icon: "🧥",
+    title: "Tavaproov + too koorivorm kaasa",
+    subtitle: "Okasroosikese maja",
+    important: true,
+    steps: [
+      { time: "16:05", e: "✅", t: "Oled kohal – too koorivorm kaasa!" },
+      { time: "16:20", e: "🎵", t: "Tavapärane proov algab" },
+    ],
+    notes: [
+      "Too: koorivorm + mustad püksid + mustad kingad",
+      "VIIMANE PÄEV koorivormi vahetamiseks – kui midagi ei sobi, ütle täna õpetajale!",
+    ],
+    bring: ["Koorivorm", "Mustad püksid", "Mustad kingad", "Noodid", "Vesi"],
+  },
+  {
+    id: 6, date: "07.05", weekday: "NELJAPÄEV",
+    color: "#0891b2", bg: "#ecfeff",
+    label: "TAVAPROOV", icon: "📋",
+    title: "Tavapärane proov",
+    subtitle: "Okasroosikese maja",
+    important: false,
+    steps: [
+      { time: "15:05", e: "✅", t: "Oled kohal – kott ja üleriided oma kohale" },
+      { time: "15:20", e: "🎵", t: "Proov algab" },
+    ],
+    notes: ["Tavaline proov, midagi uut ei toimu"],
+    bring: ["Noodid", "Vesi"],
+  },
+  {
+    id: 7, date: "11.05", weekday: "ESMASPÄEV",
+    color: "#dc2626", bg: "#fef2f2",
+    label: "SUUR ÜHISPROOV", icon: "🎻",
+    title: "Viimane suur ühisproov",
+    subtitle: "Estonia kontserdisaal",
+    important: true,
+    conflict: "Puutöö lõpeb ~14:30 – KOHE Estonia suunas, aega on napilt! Solfedžo 16:30–17:15 langeb prooviga kokku – sel päeval ei osale.",
+    steps: [
+      { time: "14:50", e: "🎒", t: "Pane üleriided ja kotid garderoobi (KOHE peale kooli!)" },
+      { time: "15:00", e: "🎵", t: "Lahtilaulmine RAMi saalis" },
+      { time: "15:20", e: "🎶", t: "Ühisproov – koor ja orkester, Mikk Üleoja" },
+      { time: "17:10", e: "✅", t: "Proov lõpeb" },
+    ],
+    notes: [
+      "Peaaegu 2-tunnine proov orkestriga – ole hästi välja puhanud!",
+      "Söö koolis lõuna ära ja tule KOHE peale kooli Estonia suunas!",
+    ],
+    bring: ["Noodid", "Vesi", "Vahepalad"],
+  },
+  {
+    id: 8, date: "12.05", weekday: "TEISIPÄEV",
+    color: "#1d4ed8", bg: "#eff6ff",
+    label: "🌟 KONTSERDI PÄEV", icon: "🌟",
+    title: "EMADEPÄEVAKONTSERT",
+    subtitle: "Estonia kontserdisaal · kell 18:00",
+    important: true,
+    steps: [
+      { time: "13:00", e: "🏫", t: "Kool lõpeb – sa oled tundidest vabastatud" },
+      { time: "13–15", e: "🏠", t: "Mine KOJU – puhka ja söö korralikult (kohustuslik!)" },
+      { time: "15:00", e: "🎒", t: "Paki kott: vesi + snäkk + RAAMAT (mitte telefon!) + koorivorm" },
+      { time: "15:15", e: "🎒", t: "Pane üleriided ja kott garderoobi" },
+      { time: "15:15", e: "🎵", t: "Lahtilaulmine RAMi saalis" },
+      { time: "15:30", e: "🎶", t: "Viimane ühisproov – koor ja orkester" },
+      { time: "16:30", e: "⏸️", t: "Proov lõpeb – ooteaeg enne kontserti" },
+      { time: "16:30–17:50", e: "📖", t: "Oota rahulikult: loe raamatut, joo vett, söö snäkki" },
+      { time: "17:50", e: "🧥", t: "Pane koorivorm selga, kontrolli välimust" },
+      { time: "18:00", e: "🌟", t: "KONTSERT ALGAB!" },
+    ],
+    notes: [
+      "TELEFONI EI SAA KASUTADA – võta raamat!",
+      "Kojas puhkamine on OLULINE – kontsert on pikk, keha vajab puhkust",
+      "Meeshäältel on kandev osa – 150 kõrge hääle vastu. Sa oled oluline!",
+    ],
+    bring: ["Koorivorm (KINDLASTI!)", "Mustad püksid (õige pikkus)", "Mustad kingad", "Vesi", "Batoon/snäkk", "Raamat (EI OLE TELEFON)"],
+  },
+];
+
+// State
+const checked = {};
+DAYS.forEach(d => {
+  checked['bring_' + d.id] = {};
+  checked['costume_' + d.id] = {};
+});
+let openId = 0; // today open by default
+
+function render() {
+  const container = document.getElementById('days');
+  container.innerHTML = '';
+
+  DAYS.forEach(day => {
+    const isOpen = openId === day.id;
+    const card = document.createElement('div');
+    card.className = 'day-card' + (isOpen ? ' open' : '');
+    card.style.borderColor = isOpen ? day.color : '';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'day-header';
+    header.style.background = isOpen ? day.bg : '';
+    header.innerHTML = `
+      <div class="day-icon-wrap" style="background:${day.bg};border-color:${day.color}30">${day.icon}</div>
+      <div class="day-meta">
+        <div class="day-tags">
+          <span class="tag-weekday" style="color:${day.color}">${day.weekday} ${day.date}</span>
+          <span class="tag-label" style="background:${day.color}">${day.label}</span>
+          ${day.important ? '<span class="tag-important">TÄHTIS</span>' : ''}
+        </div>
+        <div class="day-title">${day.title}</div>
+        <div class="day-subtitle">${day.subtitle}</div>
+      </div>
+      <span class="day-arrow">▶</span>
+    `;
+    header.addEventListener('click', () => {
+      openId = openId === day.id ? null : day.id;
+      render();
+    });
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'day-body';
+
+    // Steps
+    let html = `<div class="section-label">📍 Päev samm-sammult</div>`;
+    day.steps.forEach(s => {
+      html += `<div class="step">
+        <div class="step-time" style="color:${day.color}">${s.time}</div>
+        <div class="step-box" style="background:${day.bg};border-color:${day.color}20">
+          <span class="step-emoji">${s.e}</span>
+          <span class="step-text">${s.t}</span>
+        </div>
+      </div>`;
+    });
+
+    // Conflict
+    if (day.conflict) {
+      html += `<div class="conflict-box">
+        <div class="conflict-title">⚠️ Tunniplaani konflikt</div>
+        <div class="conflict-text">${day.conflict}</div>
+      </div>`;
+    }
+
+    body.innerHTML = html;
+
+    // Costume checklist
+    if (day.costume && day.costume.length) {
+      const sl = document.createElement('div');
+      sl.className = 'section-label';
+      sl.style.color = '#92400e';
+      sl.textContent = '🧥 Koorivormi kontroll';
+      body.appendChild(sl);
+      day.costume.forEach((item, i) => {
+        const key = 'costume_' + day.id;
+        const el = document.createElement('div');
+        el.className = 'checklist-item' + (checked[key][i] ? ' checked' : '');
+        el.innerHTML = `<div class="check-circle">${checked[key][i] ? '✓' : ''}</div><span class="check-text">${item}</span>`;
+        el.addEventListener('click', () => {
+          checked[key][i] = !checked[key][i];
+          render();
+        });
+        body.appendChild(el);
+      });
+    }
+
+    // Notes
+    if (day.notes && day.notes.length) {
+      const sl = document.createElement('div');
+      sl.className = 'section-label';
+      sl.textContent = '💡 Tea seda';
+      body.appendChild(sl);
+      day.notes.forEach(note => {
+        const el = document.createElement('div');
+        el.className = 'note';
+        el.innerHTML = `<span class="note-icon">⚡</span><span class="note-text">${note}</span>`;
+        body.appendChild(el);
+      });
+    }
+
+    // Bring checklist
+    if (day.bring && day.bring.length) {
+      const sl = document.createElement('div');
+      sl.className = 'section-label';
+      sl.textContent = '🎒 Kaasa võta – märgi linnukesega';
+      body.appendChild(sl);
+      day.bring.forEach((item, i) => {
+        const key = 'bring_' + day.id;
+        const el = document.createElement('div');
+        el.className = 'checklist-item' + (checked[key][i] ? ' checked' : '');
+        el.innerHTML = `<div class="check-circle">${checked[key][i] ? '✓' : ''}</div><span class="check-text">${item}</span>`;
+        el.addEventListener('click', () => {
+          checked[key][i] = !checked[key][i];
+          render();
+        });
+        body.appendChild(el);
+      });
+    }
+
+    card.appendChild(header);
+    card.appendChild(body);
+    container.appendChild(card);
+  });
+}
+
+render();
+</script>
+</body>
+</html>
